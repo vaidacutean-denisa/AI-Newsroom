@@ -1,4 +1,4 @@
-# AI-Newsroom# 🧠 Generator de Conținut Bazat pe Agenți AI
+# AI-Newsroom – Generator de Conținut Bazat pe Agenți AI
 
 ## 📌 Descriere
 
