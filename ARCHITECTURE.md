@@ -7,26 +7,27 @@
 actor Utilizator
 
 package "Frontend Layer" {
-  [Frontend]
+  [Frontend] as FE
 }
 
 package "Backend Layer" {
-  [Backend (Orchestrator)]
+  [Backend (Orchestrator)] as BE
 }
 
 package "Agent Layer" {
-  [Agent 1 (Cercetare)]
-  [Agent 2 (Sinteză)]
+  [Agent 1 (Cercetare)] as A1
+  [Agent 2 (Sinteză)] as A2
 }
 
 database "Local LLM (Ollama)" as LLM
 
-Utilizator --> Frontend
-Frontend --> Backend (Orchestrator)
-Backend (Orchestrator) --> Agent 1 (Cercetare)
-Backend (Orchestrator) --> Agent 2 (Sinteză)
-Agent 1 (Cercetare) --> LLM
-Agent 2 (Sinteză) --> LLM
+Utilizator --> FE
+FE --> BE
+BE --> A1
+BE --> A2
+A1 --> LLM
+A2 --> LLM
+
 @enduml
 ```
 
