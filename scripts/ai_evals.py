@@ -1,5 +1,3 @@
-import os
-
 def test_agent_output_consistency():
     """Simulează verificarea calității output-ului generat de agenți."""
     print("🚀 Running AI Evals: Verifying Agent Journalist & Editor consistency...")
