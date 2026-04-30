@@ -13,7 +13,7 @@ def test_health_check():
     assert response.json() == {"message": "AI-Newsroom API is running"}
 
 
-@patch("main.requests.post")
+@patch("src.main.requests.post")
 def test_success_response(mock_post):
     mock_post.return_value.status_code = 200
     mock_post.return_value.json.return_value = {
@@ -26,7 +26,7 @@ def test_success_response(mock_post):
     assert "response" in response.json()
 
 
-@patch("main.requests.post")
+@patch("src.main.requests.post")
 def test_error_handling_ollama_offline(mock_post):
     mock_post.side_effect = ConnectionError()
 
