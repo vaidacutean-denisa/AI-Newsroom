@@ -1,7 +1,7 @@
 from unittest.mock import patch
 from requests.exceptions import ConnectionError
 from fastapi.testclient import TestClient
-from main import app
+from src.main import app
 
 client = TestClient(app)
 
