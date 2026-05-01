@@ -47,6 +47,9 @@ INVALID_DRAFT_MESSAGE = (
 INVALID_LLM_OUTPUT_MESSAGE = (
     "Eroare internă: Agentul Jurnalist a returnat un draft invalid."
 )
+INVALID_EDITOR_OUTPUT_MESSAGE = (
+    "Eroare internă: Agentul Editor a returnat un articol final invalid."
+)
 
 
 class PromptRequest(BaseModel):
@@ -175,7 +178,9 @@ def generate_article(request: PromptRequest):
     }
     try:
         editor_result = _call_ollama(editor_payload)
-        final_article = editor_result.get("response", "")
+        final_article = editor_result.get("response", "").strip()
+        if len(final_article) < 3:
+            raise HTTPException(status_code=502, detail=INVALID_EDITOR_OUTPUT_MESSAGE)
         logger.info("Editor step completed successfully.")
     except HTTPException as exc:
         logger.error("Workflow failed at Editor step: %s", exc.detail)

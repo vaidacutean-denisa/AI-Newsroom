@@ -6,6 +6,7 @@ from fastapi.testclient import TestClient
 from src.main import (
     EDITOR_SYSTEM_PROMPT,
     INVALID_DRAFT_MESSAGE,
+    INVALID_EDITOR_OUTPUT_MESSAGE,
     INVALID_LLM_OUTPUT_MESSAGE,
     INVALID_PROMPT_MESSAGE,
     JOURNALIST_SYSTEM_PROMPT,
@@ -174,3 +175,23 @@ def test_workflow_generate_invalid_journalist_output_returns_server_error(mock_p
 
     assert response.status_code == 502
     assert response.json()["detail"] == INVALID_LLM_OUTPUT_MESSAGE
+
+
+@patch("src.main.requests.post")
+def test_workflow_generate_invalid_editor_output_returns_server_error(mock_post):
+    """Validate invalid editor output is surfaced as server-side failure."""
+
+    journalist_response = Mock()
+    journalist_response.raise_for_status.return_value = None
+    journalist_response.json.return_value = {"response": "Draft jurnalist valid"}
+
+    editor_response = Mock()
+    editor_response.raise_for_status.return_value = None
+    editor_response.json.return_value = {"response": " "}
+
+    mock_post.side_effect = [journalist_response, editor_response]
+
+    response = client.post("/article/generate", json={"prompt": "Mobilitate urbană"})
+
+    assert response.status_code == 502
+    assert response.json()["detail"] == INVALID_EDITOR_OUTPUT_MESSAGE
