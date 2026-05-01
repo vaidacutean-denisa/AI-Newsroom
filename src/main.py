@@ -1,9 +1,13 @@
 """FastAPI service for local Ollama interactions."""
 
+import logging
 import requests
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from requests.exceptions import ConnectionError as RequestsConnectionError, Timeout
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
@@ -135,3 +139,41 @@ def review_editor_draft(request: EditorRequest):
         "stream": False,
     }
     return _call_ollama(payload)
+
+
+@app.post("/article/generate")
+def generate_article(request: PromptRequest):
+    """Orchestrate Journalist and Editor agents in sequence."""
+
+    clean_prompt = _validate_prompt(request.prompt)
+    logger.info("Start article generation workflow for topic: %s", clean_prompt)
+
+    journalist_payload = {
+        "model": MODEL_NAME,
+        "system": JOURNALIST_SYSTEM_PROMPT,
+        "prompt": clean_prompt,
+        "stream": False,
+    }
+    try:
+        journalist_result = _call_ollama(journalist_payload)
+        draft_text = _validate_draft(journalist_result.get("response", ""))
+        logger.info("Journalist step completed successfully.")
+    except HTTPException as exc:
+        logger.error("Workflow failed at Journalist step: %s", exc.detail)
+        raise
+
+    editor_payload = {
+        "model": MODEL_NAME,
+        "system": EDITOR_SYSTEM_PROMPT,
+        "prompt": draft_text,
+        "stream": False,
+    }
+    try:
+        editor_result = _call_ollama(editor_payload)
+        final_article = editor_result.get("response", "")
+        logger.info("Editor step completed successfully.")
+    except HTTPException as exc:
+        logger.error("Workflow failed at Editor step: %s", exc.detail)
+        raise
+
+    return {"draft": draft_text, "final_article": final_article}
