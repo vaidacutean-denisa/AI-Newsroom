@@ -1,11 +1,13 @@
 """Integration tests for LLM API endpoints."""
 
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 from requests.exceptions import ConnectionError as RequestsConnectionError, Timeout
 from fastapi.testclient import TestClient
 from src.main import (
     EDITOR_SYSTEM_PROMPT,
     INVALID_DRAFT_MESSAGE,
+    INVALID_EDITOR_OUTPUT_MESSAGE,
+    INVALID_LLM_OUTPUT_MESSAGE,
     INVALID_PROMPT_MESSAGE,
     JOURNALIST_SYSTEM_PROMPT,
     app,
@@ -118,3 +120,78 @@ def test_editor_review_success_payload_contains_system_prompt(mock_post):
     assert payload["prompt"] == "Draft inițial articol"
     assert payload["stream"] is False
     assert payload["system"] == EDITOR_SYSTEM_PROMPT
+
+
+@patch("src.main.requests.post")
+def test_workflow_generate_success(mock_post):
+    """Validate orchestrated workflow returns draft and final article."""
+
+    journalist_response = Mock()
+    journalist_response.raise_for_status.return_value = None
+    journalist_response.json.return_value = {"response": "Draft generat de jurnalist"}
+
+    editor_response = Mock()
+    editor_response.raise_for_status.return_value = None
+    editor_response.json.return_value = {"response": "Articol final îmbunătățit"}
+
+    mock_post.side_effect = [journalist_response, editor_response]
+
+    response = client.post("/article/generate", json={"prompt": "Energie regenerabilă"})
+
+    assert response.status_code == 200
+    assert response.json()["draft"] == "Draft generat de jurnalist"
+    assert response.json()["final_article"] == "Articol final îmbunătățit"
+    assert mock_post.call_count == 2
+
+
+@patch("src.main.logger.error")
+@patch("src.main.requests.post")
+def test_workflow_generate_error_logging(mock_post, mock_logger_error):
+    """Validate workflow handles timeout and logs editor step error."""
+
+    journalist_response = Mock()
+    journalist_response.raise_for_status.return_value = None
+    journalist_response.json.return_value = {"response": "Draft valid pentru editor"}
+
+    mock_post.side_effect = [journalist_response, Timeout()]
+
+    response = client.post("/article/generate", json={"prompt": "Educație digitală"})
+
+    assert response.status_code == 504
+    mock_logger_error.assert_called_once()
+    assert "Editor step" in mock_logger_error.call_args[0][0]
+
+
+@patch("src.main.requests.post")
+def test_workflow_generate_invalid_journalist_output_returns_server_error(mock_post):
+    """Validate invalid journalist output is surfaced as server-side failure."""
+
+    journalist_response = Mock()
+    journalist_response.raise_for_status.return_value = None
+    journalist_response.json.return_value = {"response": " "}
+    mock_post.side_effect = [journalist_response]
+
+    response = client.post("/article/generate", json={"prompt": "Smart cities"})
+
+    assert response.status_code == 502
+    assert response.json()["detail"] == INVALID_LLM_OUTPUT_MESSAGE
+
+
+@patch("src.main.requests.post")
+def test_workflow_generate_invalid_editor_output_returns_server_error(mock_post):
+    """Validate invalid editor output is surfaced as server-side failure."""
+
+    journalist_response = Mock()
+    journalist_response.raise_for_status.return_value = None
+    journalist_response.json.return_value = {"response": "Draft jurnalist valid"}
+
+    editor_response = Mock()
+    editor_response.raise_for_status.return_value = None
+    editor_response.json.return_value = {"response": " "}
+
+    mock_post.side_effect = [journalist_response, editor_response]
+
+    response = client.post("/article/generate", json={"prompt": "Mobilitate urbană"})
+
+    assert response.status_code == 502
+    assert response.json()["detail"] == INVALID_EDITOR_OUTPUT_MESSAGE
