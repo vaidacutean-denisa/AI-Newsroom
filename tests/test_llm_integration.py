@@ -3,7 +3,13 @@
 from unittest.mock import patch
 from requests.exceptions import ConnectionError as RequestsConnectionError, Timeout
 from fastapi.testclient import TestClient
-from src.main import INVALID_PROMPT_MESSAGE, JOURNALIST_SYSTEM_PROMPT, app
+from src.main import (
+    EDITOR_SYSTEM_PROMPT,
+    INVALID_DRAFT_MESSAGE,
+    INVALID_PROMPT_MESSAGE,
+    JOURNALIST_SYSTEM_PROMPT,
+    app,
+)
 
 client = TestClient(app)
 
@@ -84,3 +90,31 @@ def test_journalist_draft_success_payload_contains_system_prompt(mock_post):
     assert payload["prompt"] == "Inteligența artificială"
     assert payload["stream"] is False
     assert payload["system"] == JOURNALIST_SYSTEM_PROMPT
+
+
+def test_editor_review_invalid_input():
+    """Validate friendly 400 for empty or too-short editor draft."""
+
+    response = client.post("/editor/review", json={"draft": " "})
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == INVALID_DRAFT_MESSAGE
+
+
+@patch("src.main.requests.post")
+def test_editor_review_success_payload_contains_system_prompt(mock_post):
+    """Validate editor payload includes required system prompt."""
+
+    mock_post.return_value.status_code = 200
+    mock_post.return_value.json.return_value = {"response": "Articol revizuit"}
+
+    response = client.post("/editor/review", json={"draft": "Draft inițial articol"})
+
+    assert response.status_code == 200
+    assert response.json()["response"] == "Articol revizuit"
+    _, kwargs = mock_post.call_args
+    payload = kwargs["json"]
+    assert payload["model"] == "mistral"
+    assert payload["prompt"] == "Draft inițial articol"
+    assert payload["stream"] is False
+    assert payload["system"] == EDITOR_SYSTEM_PROMPT

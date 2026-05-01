@@ -19,8 +19,26 @@ JOURNALIST_SYSTEM_PROMPT = (
     "3. Rămâi strict la tema dată."
     "4. TREBUIE SĂ SCRII DRAFTUL EXCLUSIV ÎN LIMBA ROMÂNĂ. Nu folosi limba engleză."
 )
+EDITOR_SYSTEM_PROMPT = (
+    "Ești un 'Strict Editor' și un redactor șef exigent. Vei primi un draft scris de "
+    "un jurnalist. Sarcina ta este să analizezi critic draftul, să identifici "
+    "problemele (ambiguități, repetiții) și să generezi o versiune finală, "
+    "îmbunătățită, a articolului.\n"
+    "Reguli stricte pentru Output:\n"
+    "Răspunsul tău trebuie să fie împărțit OBLIGATORIU în două secțiuni distincte:\n"
+    "Secțiunea 1: Feedback critic. Trebuie să conțină: 'Probleme identificate' "
+    "(minim 2), 'Acțiuni aplicate' și un 'Scor de calitate' (1-10).\n"
+    "Secțiunea 2: Articol final. Trebuie să fie formatat în Markdown și să conțină: "
+    "un Titlu (#), o Introducere, 2-4 secțiuni cu subtitluri (##) și o Concluzie.\n"
+    "Asigură-te că articolul final păstrează tema inițială, este coerent și are "
+    "mai puține repetiții.\n"
+    "TREBUIE SĂ RĂSPUNZI EXCLUSIV ÎN LIMBA ROMÂNĂ."
+)
 INVALID_PROMPT_MESSAGE = (
     "Te rugăm să introduci un subiect valid pentru a putea scrie articolul."
+)
+INVALID_DRAFT_MESSAGE = (
+    "Te rugăm să introduci un draft valid pentru a putea face review-ul editorial."
 )
 
 
@@ -30,6 +48,12 @@ class PromptRequest(BaseModel):
     prompt: str
 
 
+class EditorRequest(BaseModel):
+    """Request payload for editor review endpoint."""
+
+    draft: str
+
+
 def _validate_prompt(prompt: str) -> str:
     """Validate prompt content and return cleaned value."""
 
@@ -37,6 +61,15 @@ def _validate_prompt(prompt: str) -> str:
     if len(clean_prompt) < 3:
         raise HTTPException(status_code=400, detail=INVALID_PROMPT_MESSAGE)
     return clean_prompt
+
+
+def _validate_draft(draft: str) -> str:
+    """Validate editor input draft and return cleaned value."""
+
+    clean_draft = draft.strip()
+    if len(clean_draft) < 3:
+        raise HTTPException(status_code=400, detail=INVALID_DRAFT_MESSAGE)
+    return clean_draft
 
 
 def _call_ollama(payload: dict):
@@ -85,6 +118,20 @@ def create_journalist_draft(request: PromptRequest):
         "model": MODEL_NAME,
         "system": JOURNALIST_SYSTEM_PROMPT,
         "prompt": clean_prompt,
+        "stream": False,
+    }
+    return _call_ollama(payload)
+
+
+@app.post("/editor/review")
+def review_editor_draft(request: EditorRequest):
+    """Review and improve journalist draft using strict editor prompt."""
+
+    clean_draft = _validate_draft(request.draft)
+    payload = {
+        "model": MODEL_NAME,
+        "system": EDITOR_SYSTEM_PROMPT,
+        "prompt": clean_draft,
         "stream": False,
     }
     return _call_ollama(payload)
