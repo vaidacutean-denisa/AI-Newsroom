@@ -44,6 +44,9 @@ INVALID_PROMPT_MESSAGE = (
 INVALID_DRAFT_MESSAGE = (
     "Te rugăm să introduci un draft valid pentru a putea face review-ul editorial."
 )
+INVALID_LLM_OUTPUT_MESSAGE = (
+    "Eroare internă: Agentul Jurnalist a returnat un draft invalid."
+)
 
 
 class PromptRequest(BaseModel):
@@ -156,7 +159,9 @@ def generate_article(request: PromptRequest):
     }
     try:
         journalist_result = _call_ollama(journalist_payload)
-        draft_text = _validate_draft(journalist_result.get("response", ""))
+        draft_text = journalist_result.get("response", "").strip()
+        if len(draft_text) < 3:
+            raise HTTPException(status_code=502, detail=INVALID_LLM_OUTPUT_MESSAGE)
         logger.info("Journalist step completed successfully.")
     except HTTPException as exc:
         logger.error("Workflow failed at Journalist step: %s", exc.detail)
