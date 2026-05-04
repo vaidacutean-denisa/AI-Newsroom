@@ -9,6 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const loadingDiv = document.getElementById("loading");
   const logPanel = document.getElementById("logPanel");
 
+  /* 🔥 NEW: store article */
+  let currentMarkdown = "";
+
   function capitalizeFirst(text) {
     return text.charAt(0).toUpperCase() + text.slice(1);
   }
@@ -45,14 +48,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function formatText(text) {
     return text
       .replace(/---+/g, "") 
-      
-      // 🔥 titlu mare (#) dar NU bold
       .replace(/^# (.*)$/gm, '<h2 style="font-weight: normal;">$1</h2>')
-      
-      // 🔥 subtitlu mai mare (##)
       .replace(/^## (.*)$/gm, '<h3>$1</h3>')
-      
-      // spacing
       .replace(/\n{2,}/g, "<br><br>")
       .replace(/\n/g, "<br>");
   }
@@ -99,6 +96,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.toggleLogs = toggleLogs;
 
+  /* ================= COPY ================= */
+  function copyArticle() {
+    navigator.clipboard.writeText(currentMarkdown);
+    alert("Copied to clipboard!");
+  }
+
+  window.copyArticle = copyArticle;
+
+  /* ================= PDF ================= */
+  function exportPDF() {
+    const win = window.open("", "_blank");
+
+    win.document.write(`
+      <html>
+        <head><title>Article</title></head>
+        <body>
+          <pre style="font-family: Georgia; white-space: pre-wrap;">
+${currentMarkdown}
+          </pre>
+        </body>
+      </html>
+    `);
+
+    win.document.close();
+    win.print();
+  }
+
+  window.exportPDF = exportPDF;
+
   /* ================= INPUT ================= */
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter") askAI();
@@ -131,6 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     addLog("RUNNING", "Editorul analizează...");
     await new Promise(r => setTimeout(r, 400));
+
     const startTime = Date.now();
     addLog("RUNNING", "Trimite request...");
 
@@ -149,18 +176,30 @@ document.addEventListener("DOMContentLoaded", () => {
       const finalRaw = data.final_article || "";
 
       const { feedback, final } = parseEditor(finalRaw);
+
+      /* 🔥 STORE MARKDOWN */
+      currentMarkdown = finalRaw;
+
       const endTime = Date.now();
       const duration = ((endTime - startTime) / 1000).toFixed(1);
+
       loadingDiv.style.display = "none";
       responseDiv.style.display = "block";
 
       responseDiv.innerHTML =
         `<h2>${capitalizeFirst(prompt)}</h2>` +
-
         createSection("Input utilizator", prompt) +
         createSection("Draft (Jurnalist)", draft) +
         createSection("Feedback (Editor)", feedback) +
-        createSection("Articol final", final);
+        createSection("Articol final", final) +
+
+        /* 🔥 BUTTONS */
+        `
+        <div style="display:flex; gap:10px; margin-top:15px;">
+          <button onclick="copyArticle()">📋 Copy text</button>
+          <button onclick="exportPDF()">📄 Export PDF</button>
+        </div>
+        `;
 
       addLog("DONE", `Articol generat în ${duration}s`);
 
@@ -174,5 +213,4 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   window.askAI = askAI;
-
 });
