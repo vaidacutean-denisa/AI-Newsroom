@@ -9,7 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const loadingDiv = document.getElementById("loading");
   const logPanel = document.getElementById("logPanel");
 
-  /* 🔥 NEW: store article */
+  /* 🔥 BUTTON reference */
+  const generateBtn = document.querySelector("button");
+
   let currentMarkdown = "";
 
   function capitalizeFirst(text) {
@@ -44,10 +46,10 @@ document.addEventListener("DOMContentLoaded", () => {
     return { feedback, final };
   }
 
-  /* 🔥 FORMAT TEXT (IMPORTANT) */
+  /* ================= FORMAT ================= */
   function formatText(text) {
     return text
-      .replace(/---+/g, "") 
+      .replace(/---+/g, "")
       .replace(/^# (.*)$/gm, '<h2 style="font-weight: normal;">$1</h2>')
       .replace(/^## (.*)$/gm, '<h3>$1</h3>')
       .replace(/\n{2,}/g, "<br><br>")
@@ -110,7 +112,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     win.document.write(`
       <html>
-        <head><title>Article</title></head>
         <body>
           <pre style="font-family: Georgia; white-space: pre-wrap;">
 ${currentMarkdown}
@@ -147,6 +148,10 @@ ${currentMarkdown}
 
     errorDiv.style.display = "none";
 
+    /* 🔥 DISABLE BUTTON */
+    generateBtn.disabled = true;
+    generateBtn.innerText = "Generating...";
+
     logContainer.innerHTML = "";
     responseDiv.innerHTML = "";
     responseDiv.style.display = "none";
@@ -177,7 +182,6 @@ ${currentMarkdown}
 
       const { feedback, final } = parseEditor(finalRaw);
 
-      /* 🔥 STORE MARKDOWN */
       currentMarkdown = finalRaw;
 
       const endTime = Date.now();
@@ -192,8 +196,6 @@ ${currentMarkdown}
         createSection("Draft (Jurnalist)", draft) +
         createSection("Feedback (Editor)", feedback) +
         createSection("Articol final", final) +
-
-        /* 🔥 BUTTONS */
         `
         <div style="display:flex; gap:10px; margin-top:15px;">
           <button onclick="copyArticle()">📋 Copy text</button>
@@ -209,6 +211,11 @@ ${currentMarkdown}
       responseDiv.innerHTML = "Error connecting to backend.";
 
       addLog("ERROR", "Eroare");
+
+    } finally {
+      /* 🔥 RE-ENABLE BUTTON */
+      generateBtn.disabled = false;
+      generateBtn.innerText = "Generate";
     }
   }
 
