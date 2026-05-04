@@ -1,148 +1,189 @@
 body {
-    font-family: Georgia;
-    background: #e8e4dc;
-    margin: 0;
-    color: #2b2b2b;
-  }
-  
-  /* HEADER */
-  header {
-    text-align: center;
-    padding: 25px;
-    font-size: 28px;
-    background: #f4f1ea;
-    border-bottom: 1px solid #cfcac2;
-  }
-  
-  /* INPUT CARD (cum vrei tu) */
-  .input-card {
-    width: 500px;
-    margin: 30px auto;
-    background: #f4f1ea;
-    padding: 25px;
-    border-radius: 14px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.05);
-    text-align: center;
-  }
-  
-  .prompt-line {
-    font-size: 18px;
-    margin-bottom: 15px;
-  }
-  
-  .prompt-line input {
-    border: none;
-    border-bottom: 1px solid #555;
-    background: transparent;
-    outline: none;
-    font-size: 18px;
-    margin-left: 10px;
-  }
-  
-  button {
-    padding: 8px 16px;
-    border: 1px solid #555;
-    background: transparent;
-    border-radius: 10px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background: #2b2b2b;
-    color: white;
-  }
-  
-  #error {
-    display: none;
-    color: #a94442;
-    font-size: 13px;
-    margin-top: 10px;
-  }
-  
-  /* ARTICLE */
-  .container {
-    display: flex;
-    justify-content: center;
-    padding: 40px;
-  }
-  
-  #response {
-    background: #f4f1ea;
-    padding: 30px;
-    border-radius: 12px;
-    max-width: 700px;
-    width: 100%;
-    display: none;
-    line-height: 1.6;
-  }
-  
-  /* LOADING */
-  .loading {
-    display: none;
-    margin-top: 20px;
-    justify-content: center;
-    gap: 10px;
-  }
-  
-  .spinner {
-    width: 14px;
-    height: 14px;
-    border: 2px solid #ccc;
-    border-top: 2px solid #333;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-  
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-  
-  /* ================= LOGS ================= */
-  
-  /* colț dreapta SUS */
-  .log-panel {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-  
-    width: 240px;
-    background: #f4f1ea;
-  
-    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-    z-index: 999;
-  
-    transition: 0.3s;
-  }
-  
-  /* DESCHIS */
-  .log-panel.open {
-    height: 260px;
-    padding: 10px;
-  }
-  
-  /* INCHIS -> DOAR SAGEATA */
-  .log-panel.closed {
-    width: 30px;
-    height: 30px;
-    padding: 0;
-    overflow: hidden;
-  }
-  
-  /* BUTON SAGEATA */
-  .log-toggle {
-    cursor: pointer;
-    font-size: 14px;
-    text-align: center;
-    padding: 6px;
-  }
-  
-  /* LOGS */
-  #logContainer {
-    font-size: 12px;
-    margin-top: 10px;
-  }
-  
-  .log-item {
-    margin-top: 6px;
-    opacity: 0.8;
-  }
+  font-family: Georgia;
+  margin: 0;
+  color: #2b2b2b;
+  background-color: #e8e4dc;
+  background-image: url("back1.png");
+  background-repeat: no-repeat;
+
+  background-position: center top;
+  background-size: 100% auto; /* 🔥 important */
+  background-attachment: fixed;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(232, 228, 220, 0.55);
+  z-index: -1;
+}
+/* HEADER */
+header {
+  text-align: center;
+  padding: 20px;
+  font-size: 20px;
+  background: #f4f1ea;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+
+.title {
+  text-align: center;
+  margin: 0;
+}
+/* INPUT CARD */
+.input-card {
+  width: 500px;
+  margin: 30px auto;
+  background: #f4f1ea;
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+  text-align: center;
+}
+
+.prompt-line {
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.prompt-line input {
+  border: none;
+  border-bottom: 1px solid #555;
+  background: transparent;
+  outline: none;
+  font-size: 18px;
+  margin-left: 10px;
+}
+
+button {
+  padding: 8px 16px;
+  border: 1px solid #555;
+  background: transparent;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #2b2b2b;
+  color: white;
+}
+
+#error {
+  display: none;
+  color: #a94442;
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+/* ARTICLE */
+.container {
+  display: flex;
+  justify-content: center;
+  padding: 60px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+#response {
+  background: #f4f1ea;
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 700px;
+  width: 100%;
+  display: none;
+  line-height: 1.6;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+}
+
+/* LOADING */
+.loading {
+  display: none;
+  margin-top: 20px;
+  justify-content: center;
+  gap: 10px;
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #ccc;
+  border-top: 2px solid #333;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ================= BLOCK SECTIONS ================= */
+
+.block {
+  margin-top: 25px;
+}
+
+.block-title {
+  cursor: pointer;
+  font-weight: bold;
+  padding: 10px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+.block-content {
+  padding: 10px 0;
+}
+
+/* ================= LOGS ================= */
+
+.log-panel {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+
+  background: #f4f1ea;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+  z-index: 999;
+
+  transition: 0.3s;
+}
+
+/* OPEN */
+.log-panel.open {
+  width: 260px;
+  height: 260px;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+/* CLOSED */
+.log-panel.closed {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* ARROW */
+.log-toggle {
+  cursor: pointer;
+  text-align: center;
+  padding: 6px;
+}
+
+/* LOG CONTENT */
+#logContainer {
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.log-item {
+  margin-top: 6px;
+  opacity: 0.8;
+}
