@@ -1,3 +1,4 @@
+import os
 import sys
 import requests
 
@@ -31,7 +32,6 @@ def eval_logic_and_length(input_text, editor_output):
         
     return True, "Validare text modificat & reorganizat incheiata cu succes."
 
-import os
 
 def run_evaluations():
     print("🚀 Incepere evaluare calitate pentru Agent Editor...\n")
