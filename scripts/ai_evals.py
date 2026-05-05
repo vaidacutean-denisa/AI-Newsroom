@@ -1,12 +1,18 @@
-def test_agent_output_consistency():
-    """Simulează verificarea calității output-ului generat de agenți."""
-    print("🚀 Running AI Evals: Verifying Agent Journalist & Editor consistency...")
+import sys
+
+# Cele 3 inputuri predefinite pentru verificarea Editorului (drafturi jurnalist)
+PREDEFINED_INPUTS = [
+    "Azi e o zi frumoasa, soarele straluceste dar masinile sunt blocate in trafic ore intregi pe autostrada si oamenii sunt nervosi.",
+    "Compania tech X a lansat un produs nou telefon mobil care face poze 3d si costa prea mult cred parerea mea.",
+    "Guvernul anunta marirea taxelor de anul viitor pentru toti antreprenorii. Asta o sa scada numarul de firme mici. Nasol."
+]
+
+def run_evaluations():
+    print("🚀 Incepere evaluare calitate pentru Agent Editor...\n")
+    print(f"S-au incarcat {len(PREDEFINED_INPUTS)} inputuri predefinite.")
     
-    # Exemplu de criteriu de evaluare: Output-ul trebuie să fie Markdown valid
-    sample_output = "# Titlu Articol\nAcesta este un draft."
-    
-    assert sample_output.startswith("#"), "Agent output must start with a Markdown header"
-    print("✅ Eval Passed: Content structure is correct.")
+    # Restul logicii (testarea structurii, lungimii etc) va fi adaugata in commit-urile urmatoare
+    print("✅ Setup inputs complet.")
 
 if __name__ == "__main__":
-    test_agent_output_consistency()
+    run_evaluations()
