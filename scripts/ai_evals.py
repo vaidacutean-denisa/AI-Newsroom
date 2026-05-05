@@ -18,6 +18,16 @@ def eval_markdown_and_structure(editor_output):
         return False, "Esec: Output-ul nu este structurat cu un titlu la inceput."
     return True, "Validare Markdown & Structura incheiata cu succes."
 
+def eval_logic_and_length(input_text, editor_output):
+    """Verifica diferentele si reorganizarea textului cerute in Acceptance Criteria."""
+    if input_text.strip() == editor_output.strip():
+        return False, "Esec: Textul nu a fost modificat de Editor (output == input)."
+    
+    if len(editor_output) < 15:
+        return False, "Esec: Textul generat este prea scurt pentru un articol revizuit."
+        
+    return True, "Validare text modificat & reorganizat incheiata cu succes."
+
 def run_evaluations():
     print("🚀 Incepere evaluare calitate pentru Agent Editor...\n")
     
@@ -28,21 +38,28 @@ def run_evaluations():
             response.raise_for_status()
             output = response.json()["response"]
             
-            # Verificare: Markdown si Structura
-            is_valid, msg = eval_markdown_and_structure(output)
-            if not is_valid:
-                print(f"❌ {msg}\n")
+            # Verificare 1: Markdown si Structura
+            is_valid_md, msg_md = eval_markdown_and_structure(output)
+            if not is_valid_md:
+                print(f"❌ {msg_md}\n")
                 sys.exit(1)
-            print(f"✅ {msg}")
+            print(f"✅ {msg_md}")
             
-            # (Validarile logice vor fi adaugate in commit-ul urmator)
+            # Verificare 2: Logica si Reorganizare
+            is_valid_logic, msg_logic = eval_logic_and_length(input_text, output)
+            if not is_valid_logic:
+                print(f"❌ {msg_logic}\n")
+                sys.exit(1)
+            print(f"✅ {msg_logic}")
+            
+            print(f"✔️  Input {idx+1} a trecut toate criteriile.\n")
             
         except requests.exceptions.RequestException as e:
             print(f"⚠️ API-ul nu raspunde (Asigura-te ca serverul FastAPI ruleaza): {e}")
             print("❌ Opreste rularea din cauza erorii de conexiune.")
             sys.exit(1)
             
-    print("\n✅ Evaluare Editor: Toate textele au trecut cu succes!")
+    print("✅ Evaluare Editor: Toate textele au trecut cu succes!")
 
 if __name__ == "__main__":
     run_evaluations()
