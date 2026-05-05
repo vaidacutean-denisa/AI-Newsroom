@@ -86,7 +86,8 @@ def _call_ollama(payload: dict):
     """Call Ollama API and normalize error handling."""
 
     try:
-        response = requests.post(OLLAMA_URL, json=payload, timeout=60)
+        # Fara timeout: asteptam la nesfarsit ca Ollama sa genereze pe laptopuri mai incete
+        response = requests.post(OLLAMA_URL, json=payload, timeout=None)
         response.raise_for_status()
         return response.json()
 

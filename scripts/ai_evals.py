@@ -14,8 +14,11 @@ def eval_markdown_and_structure(editor_output):
     """Verifica prezenta tag-urilor Markdown (#, ##) si structurii logice."""
     if "#" not in editor_output:
         return False, "Esec: Output-ul nu contine Markdown (# sau ##)."
-    if not editor_output.strip().startswith("#"):
-        return False, "Esec: Output-ul nu este structurat cu un titlu la inceput."
+        
+    # Modelul a fost instruit sa dea Feedback mai intai, deci verificam prezenta sectiunilor
+    if "Secțiunea" not in editor_output and "Feedback" not in editor_output:
+        return False, "Esec: Output-ul nu contine sectiunile structurale cerute."
+        
     return True, "Validare Markdown & Structura incheiata cu succes."
 
 def eval_logic_and_length(input_text, editor_output):
