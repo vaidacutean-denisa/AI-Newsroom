@@ -3,6 +3,7 @@
 import logging
 import requests
 from fastapi import FastAPI, HTTPException
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from requests.exceptions import ConnectionError as RequestsConnectionError, Timeout
 
@@ -104,11 +105,11 @@ def _call_ollama(payload: dict):
         raise HTTPException(status_code=500, detail=str(e)) from e
 
 
-@app.get("/")
-def root():
-    """Return service health status."""
+# @app.get("/")
+# def root():
+#     """Return service health status."""
 
-    return {"message": "AI-Newsroom API is running"}
+#     return {"message": "AI-Newsroom API is running"}
 
 
 @app.post("/ask")
@@ -187,3 +188,6 @@ def generate_article(request: PromptRequest):
         raise
 
     return {"draft": draft_text, "final_article": final_article}
+
+
+app.mount("/", StaticFiles(directory="src", html=True), name="static")
