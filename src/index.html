@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Newsroom</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="icon.png" type="image/png">
+</head>
+
+<body>
+  
+<header>
+  
+  <h1 class="title">AI Newsroom</h1>
+</header>
+
+<!-- INPUT CARD -->
+<div class="input-card">
+  <div class="prompt-line">
+    Generate an article about
+    <input id="prompt" placeholder="..." />
+  </div>
+
+  <button onclick="askAI()">Generate</button>
+  <div id="error">Please enter a topic.</div>
+</div>
+
+<!-- ARTICLE -->
+<div class="container">
+  <div id="response"></div>
+
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    Generating article...
+  </div>
+</div>
+<div id="actions" class="actions hidden">
+  <button onclick="copyArticle()">📋 Copy text</button>
+  <button onclick="exportPDF()">📄 Export PDF</button>
+</div>
+<!-- LOGS -->
+<div id="logPanel" class="log-panel closed">
+  <div class="log-toggle" onclick="toggleLogs()">
+    <span id="arrow">▶</span>
+  </div>
+
+  <div id="logContainer"></div>
+</div>
+
+<script src="script.js" defer></script>
+
+</body>
+</html>
