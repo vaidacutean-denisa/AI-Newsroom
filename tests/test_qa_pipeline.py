@@ -8,7 +8,7 @@ def test_api_endpoints_health_and_structure():
     """Test generat cu AI: Verifica daca endpoint-urile respecta structura API definita."""
     response = client.get("/")
     assert response.status_code == 200
-    assert "message" in response.json()
+    # Am eliminat validarea JSON deoarece pe / acum se incarca o pagina HTML (Frontend-ul)
 
 @patch("src.main.requests.post")
 def test_agent_pipeline_e2e_flow(mock_post):
