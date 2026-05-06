@@ -167,7 +167,7 @@ ${currentMarkdown}
     addLog("RUNNING", "Trimite request...");
 
     try {
-      const res = await fetch("http://localhost:8000/article/generate", {
+      const res = await fetch("/article/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt })
