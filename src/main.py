@@ -1,6 +1,7 @@
 """FastAPI service for local Ollama interactions."""
 
 import logging
+import os
 import requests
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
@@ -16,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
-OLLAMA_URL = "http://localhost:11434/api/generate"
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://host.docker.internal:11434/api/generate")
 MODEL_NAME = "mistral"
 JOURNALIST_SYSTEM_PROMPT = (
     "Ești un 'Content Creator' și un jurnalist de top. Sarcina ta este să primești "
