@@ -89,7 +89,7 @@ def generate_report():
         md.append(f"* **Coherence Score**: `{coherence} / 5`")
         md.append(f"* **Relevance Score**: `{relevance} / 5`")
         md.append(f"* **Status**: `{'✅ PASSED' if coherence >= 3 and relevance >= 3 else '❌ FAILED'}`")
-        md.append(f"* **Judge Reasoning**:")
+        md.append("* **Judge Reasoning**:")
         md.append(f"  > {reasoning}\n")
         
         editor_output = r["editor_output"]
@@ -109,7 +109,7 @@ def generate_report():
     with open(report_path, "w", encoding="utf-8") as f:
         f.write("\n".join(md))
         
-    print(f"🎉 Markdown report successfully generated at: docs/eval_report.md")
+    print("🎉 Markdown report successfully generated at: docs/eval_report.md")
 
 if __name__ == "__main__":
     generate_report()

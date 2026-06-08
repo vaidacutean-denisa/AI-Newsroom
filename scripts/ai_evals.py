@@ -151,7 +151,7 @@ def run_evaluations():
             print(f"💡 Reasoning: {reasoning}")
             
             if c_score < 3 or r_score < 3:
-                print(f"❌ LLM-as-a-Judge Fail: Score below minimum threshold (3/5)!\n")
+                print("❌ LLM-as-a-Judge Fail: Score below minimum threshold (3/5)!\n")
                 sys.exit(1)
             print("✅ LLM-as-a-Judge evaluation passed.")
             
@@ -177,7 +177,7 @@ def run_evaluations():
     os.makedirs(os.path.dirname(results_file), exist_ok=True)
     with open(results_file, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2, ensure_ascii=False)
-    print(f"📊 Results exported to: docs/eval_results.json")
+    print("📊 Results exported to: docs/eval_results.json")
     
     print("✅ Editor Evaluation: All inputs passed successfully!")
 

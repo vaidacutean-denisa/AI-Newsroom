@@ -3,9 +3,7 @@ Unit tests for the custom evaluation rules in scripts/ai_evals.py.
 Verifies that validations correctly pass/fail depending on input quality.
 """
 
-import unittest
 from unittest.mock import patch, Mock
-import pytest
 
 from scripts.ai_evals import (
     eval_markdown_and_structure,
