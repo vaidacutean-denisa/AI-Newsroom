@@ -195,4 +195,9 @@ def generate_article(request: PromptRequest):
     return {"draft": draft_text, "final_article": final_article}
 
 
+@app.get("/health")
+def health_check():
+    """Health check endpoint for automated tests."""
+    return {"status": "ok", "message": "AI-Newsroom API is running"}
+
 app.mount("/", StaticFiles(directory="src", html=True), name="static")
