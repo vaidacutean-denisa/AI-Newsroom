@@ -16,7 +16,6 @@ body::before {
   z-index: -1;
 }
 
-/* FULL WIDTH FIX */
 .app {
   width: 100%;
   min-height: 100vh;
@@ -95,15 +94,12 @@ button:hover {
   padding: 30px;
   border-radius: 12px;
 
-  box-sizing: border-box; /* 🔥 IMPORTANT */
+  box-sizing: border-box; 
   overflow-wrap: break-word;
   word-break: break-word;
 }
 
-/* ========================= */
 /* NEWSPAPER CONTENT */
-/* ========================= */
-
 .newspaper-content {
   margin-top: 15px;
 
@@ -128,14 +124,6 @@ button:hover {
   word-break: break-word;
 
   box-sizing: border-box;
-}
-
-/* ========================= */
-/* BLOCKS */
-/* ========================= */
-
-.block {
-  margin-top: 25px;
 }
 
 .block-title {
@@ -176,8 +164,8 @@ button:hover {
   font-size: 16px;
   line-height: 1.6;
 
-  white-space: pre-wrap;   /* 🔥 CHEIE */
-  word-break: break-word;  /* 🔥 CHEIE */
+  white-space: pre-wrap;   
+  word-break: break-word;  
   overflow-wrap: break-word;
 }
 
@@ -188,7 +176,7 @@ button:hover {
   gap: 10px;
 }
 
-/* LOG PANEL FIX */
+/* LOG PANEL*/
 .log-panel {
   position: fixed;
   top: 20px;
