@@ -10,7 +10,7 @@ client = TestClient(app)
 
 def test_api_endpoints_health_and_structure():
     """Test generat cu AI: Verifica daca endpoint-urile respecta structura API definita."""
-    response = client.get("/")
+    response = client.get("/health")
     assert response.status_code == 200
 
 
