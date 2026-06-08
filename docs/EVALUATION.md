@@ -51,24 +51,3 @@ graph TD
 1. **Promptul Evaluatorului**: Ghidează LLM-ul să joace rolul unui arbitru obiectiv și îl forțează să returneze un format strict JSON conținând `coherence_score`, `relevance_score` și `reasoning`.
 2. **Modul CI (Continuous Integration)**: Pentru a fi integrat în GitHub Actions fără a depinde de o instanță activă de Ollama în cloud, scriptul detectează mediul (`CI=true`) și simulează un răspuns valid al judecătorului.
 3. **Local**: Apelează API-ul `/ask` al aplicației FastAPI, delegând evaluarea către modelul `mistral` din Ollama.
-
----
-
-## 🎓 4. Ghid de Apărare a Proiectului (Q&A pentru Profesor)
-
-În timpul prezentării sau apărării proiectului, s-ar putea să primești întrebări de la profesori sau colegi. Iată răspunsurile cheie pregătite:
-
-### Q1: "De ce ai folosit LLM-as-a-Judge în loc de metrici standard ca BLEU/ROUGE?"
-> **Răspuns**: Metricile lexicale precum BLEU și ROUGE caută suprapuneri literale de cuvinte. În cazul generării de articole de știri, un editor poate rescrie complet un paragraf pentru a fi mai fluid semantic, păstrând în același timp ideea. BLEU ar da un scor de 0% pentru că nu s-au potrivit cuvintele. G-Eval, pe de altă parte, înțelege sensul textului și evaluează coerența și relevanța din punct de vedere semantic, având o corelație demonstrată statistic mult mai apropiată de evaluarea realizată de profesioniști umani.
-
-### Q2: "Nu există un risc de bias/auto-evaluare dacă același LLM (Mistral) a generat textul și tot el îl evaluează?"
-> **Răspuns**: Într-adevăr, în literatura de specialitate (ex: *Zheng et al., 2023*) este documentat fenomenul de "self-enhancement bias" (LLM-urile tind să dea note mai mari textelor generate de ele însele). Pentru a reduce acest bias, am implementat:
-> 1. Roluri complet distincte prin prompts de sistem (Editorul este instruit să fie critic, iar Judecătorul este complet neutru).
-> 2. O scară de evaluare granulată cu criterii specifice (nu doar o notă generală).
-> 3. Pe viitor sau într-un mediu de producție, judecătorul poate fi un model mai mare și complet diferit (de exemplu, un model open-source specializat în evaluări, precum Prometheus, sau GPT-4 prin API).
-
-### Q3: "Cum asiguri stabilitatea output-ului (JSON) de la LLM-ul judecător?"
-> **Răspuns**: În `EVALUATOR_SYSTEM_PROMPT` am impus reguli foarte stricte privind formatul de ieșire (JSON). În plus, în codul Python am implementat o logică de curățare a blocurilor de cod Markdown (` ```json ` și ` ``` `) și blocuri de tip `try-except` care previn prăbușirea sistemului în caz de eroare de parsare, mapând erorile pe un scor implicit de `0` pentru a semnala un test eșuat.
-
-### Q4: "Ce se întâmplă dacă evaluarea eșuează în pipeline?"
-> **Răspuns**: Dacă scorul de coerență sau relevanță scade sub pragul minim acceptabil de `3/5`, scriptul se termină cu codul de ieșire `1`. În pipeline-ul CI/CD din GitHub Actions, acest lucru va bloca automat îmbinarea codului (Pull Request), asigurându-ne că nicio schimbare de cod nu degradează calitatea textelor generate de agenți.
