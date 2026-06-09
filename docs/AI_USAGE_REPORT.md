@@ -93,7 +93,7 @@ Acest raport documentează modul în care inteligența artificială a fost integ
 
 ## 🛠️ Tool-uri AI Utilizate
 * **Gemini (Google):** Utilizat pentru decizii metodologice (alegerea framework-ului G-Eval și definirea criteriilor academice de Coerență și Relevanță), depanarea erorilor specifice sistemului Windows (rezolvarea `UnicodeEncodeError` prin setarea `PYTHONIOENCODING="utf-8"`) și redactarea suportului teoretic pentru susținerea proiectului.
-* **Cursor (AI IDE):** Utilizat pentru scrierea rapidă a structurilor de testare cu Pytest, mock-uirea request-urilor HTTP către Ollama și generarea scriptului de asamblare a rapoartelor finale Markdown.
+* **Antigravity IDE (AI IDE):** Utilizat pentru scrierea rapidă a structurilor de testare cu Pytest, mock-uirea request-urilor HTTP către Ollama și generarea scriptului de asamblare a rapoartelor finale Markdown.
 
 ## 🚀 Etapele de dezvoltare asistate de AI
 
