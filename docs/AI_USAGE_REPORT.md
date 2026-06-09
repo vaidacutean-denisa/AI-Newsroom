@@ -30,3 +30,30 @@ Identificarea și rezolvarea bug-urilor: Un bug critic (eroare 500) cauzat de li
 ## 🎯 Concluzie
 Integrarea Agentic AI-ului în procesul de dezvoltare a transformat AI-ul dintr-un simplu generator de cod într-un partener activ de dezvoltare. A prevenit erori umane (ex: evitarea poluării repository-ului prin configurarea greșită a mediului .venv), a accelerat rezolvarea blocajelor de infrastructură (Docker) și a asigurat un standard ridicat de profesionalism în documentație și versionare.
 
+
+## Rol: DevOps & Pipeline Automation Engineer
+
+Acest raport documentează modul în care inteligența artificială a fost integrată în configurarea și optimizarea infrastructurii de Continuous Integration și Continuous Delivery (CI/CD), în corectarea erorilor de arhitectură din mediile izolate și în sincronizarea modulelor Full-Stack, asigurând conformitatea cu cerințele privind utilizarea exhaustivă a componentelor AI în ciclul de viață al proiectului.
+
+## 🛠️ Tool-uri AI Utilizate
+* **Gemini (Google):** Utilizat ca arhitect DevOps virtual și expert în depanare (Pair-Programmer) pentru diagnosticarea erorilor de rulare din GitHub Actions, generarea corecțiilor de rețea/rute și redactarea raportului academic de față.
+* **itHub Copilot:** Utilizate pentru optimizarea sintaxei fișierelor de configurare YAML, autocompletarea căilor relative în scripturile de testare și generarea automată a mesajelor tehnice de commit aferente procesului de integrare.
+
+## 🚀 Etapele de dezvoltare asistate de AI
+
+### 1. Proiectarea și Extinderea Pipeline-ului CI/CD
+* **Automatizarea Fluxurilor (CI & CD):** Logica inițială de Continuous Integration a fost extinsă cu asistența AI prin adăugarea unui job secundar, automatizat, destinat Continuous Delivery (CD). AI-ul a implementat reguli condiționale stricte (`needs: build-and-test` și structuri de tip `if`), asigurându-se că generarea imaginii de producție are loc exclusiv în urma trecerii tuturor testelor unitare și doar la detectarea unui eveniment de tip `push` pe branch-urile stabile (`main`, `develop`).
+* **Containerizare Automatizată:** Pasul de CD a fost configurat cu ajutorul AI-ului pentru a utiliza acțiuni standardizate (`docker/setup-buildx-action@v3`), orchestrând asamblarea automată a containerului de backend (`ai-newsroom-backend:latest`) în mod steril pe runner-ul de GitHub Actions.
+
+### 2. Debugging Avansat și Rezolvarea Eroilor de Context (Environment Debugging)
+* **Remedierea Erorilor de Structură (`ENOENT`):** În faza de asamblare a frontend-ului, pipeline-ul genera o eroare cauzată de absența fișierului `package.json` în rădăcina proiectului. Prin analizarea structurii directoarelor, AI-ul a identificat că ecosistemul React era izolat în subdirectorul `frontend-react/`. Soluția generată de AI a constat în injectarea directivei `working-directory` în interiorul pașilor definiți pentru Node.js, redirecționând contextual execuția comenzilor `npm install` și `npm run build`.
+  
+### 3. Soluționarea Conflictelor Arhitecturale Full-Stack (Pytest 404 Resolution)
+* **Izolarea Mediului de Testare:** Ulterior compilării frontend-ului, testele unitare executate prin `pytest` raportau erori de tipul `404 Not Found` la interogarea rutei `/`. AI-ul a diagnosticat conflictul arhitectural: montarea fișierelor statice (`app.mount("/", StaticFiles(...))`) suprascria comportamentul rutei de backend în cadrul runner-ului virtual.
+* **Refactoring Asistat de AI:** La recomandarea AI-ului, s-a optat pentru decuplarea testelor automate de starea fișierelor statice. AI-ul a generat un nou endpoint dedicat stării sistemului (`@app.get("/health")`) în `main.py` și a ghidat refactorizarea completă a aserțiunilor din suitele de testare `tests/test_llm_integration.py` și `tests/test_qa_pipeline.py`. Această abordare a restabilit validarea corectă a codurilor de stare `200 OK` sub formă de răspunsuri JSON structurate.
+
+### 4. Managementul Git Workflow și Livrarea Codului
+* **Ghidare Contextuală CLI:** În faza de Source Control, la apariția erorii `fatal: pathspec`, AI-ul a interpretat corect poziția curentă a utilizatorului în structura de directoare (`.github/workflows/`) și a oferit instrucțiunile de navigare relativă pentru adăugarea și stocarea corectă a fișierelor modificate.
+
+## 🎯 Concluzie
+Integrarea instrumentelor de inteligență artificială în zona de DevOps a demonstrat că AI-ul poate acționa ca un inginer de sistem capabil să asigure coerența între module software eterogene. Prin intermediul asistenței AI, au fost eliminate blocajele de mapare a directoarelor și conflictele de rutare din aplicația monolit, livrându-se un flux de integrare și containerizare complet automatizat, stabil și aliniat la standardele riguroase din industrie.
