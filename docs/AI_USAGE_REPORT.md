@@ -82,14 +82,6 @@ Cu ajutorul AI-ului au fost propuse și implementate îmbunătățiri ale experi
 * îmbunătățirea aspectului vizual al aplicației;
 * optimizarea afișării conținutului generat de agenții AI.
 
-### 3. Debugging și integrare
-
-AI-ul a fost utilizat pentru identificarea și rezolvarea problemelor de integrare dintre frontend și backend, inclusiv:
-
-* configurarea corectă a apelurilor către API;
-* investigarea erorilor generate;
-* verificarea compatibilității dintre aplicația React și serviciile backend;
-
 ## 🎯 Concluzie
 
 Utilizarea instrumentelor AI a accelerat semnificativ procesul de dezvoltare a interfeței și a contribuit la îmbunătățirea experienței utilizatorului. AI-ul a fost utilizat atât pentru generarea și refactorizarea codului React, cât și pentru rezolvarea problemelor de integrare și optimizarea designului aplicației, reducând timpul necesar implementării și testării funcționalităților frontend.
