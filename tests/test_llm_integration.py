@@ -17,13 +17,12 @@ client = TestClient(app)
 
 
 def test_health_check():
-    """Validate root endpoint serves frontend UI."""
+    """Validate health endpoint returns service status."""
 
-    response = client.get("/")
+    response = client.get("/health")
 
     assert response.status_code == 200
-    assert "text/html" in response.headers["content-type"]
-    assert "<!DOCTYPE html>" in response.text
+    assert response.json() == {"status": "ok", "message": "AI-Newsroom API is running"}
 
 
 @patch("src.main.requests.post")

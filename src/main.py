@@ -1,18 +1,23 @@
 """FastAPI service for local Ollama interactions."""
 
 import logging
+import os
 import requests
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
-from requests.exceptions import ConnectionError as RequestsConnectionError, Timeout
+from requests.exceptions import (
+    ConnectionError as RequestsConnectionError,
+    Timeout,
+    HTTPError,
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
-OLLAMA_URL = "http://localhost:11434/api/generate"
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://host.docker.internal:11434/api/generate")
 MODEL_NAME = "mistral"
 JOURNALIST_SYSTEM_PROMPT = (
     "Ești un 'Content Creator' și un jurnalist de top. Sarcina ta este să primești "
@@ -87,7 +92,6 @@ def _call_ollama(payload: dict):
     """Call Ollama API and normalize error handling."""
 
     try:
-        # Fara timeout: asteptam la nesfarsit ca Ollama sa genereze pe laptopuri mai incete
         response = requests.post(OLLAMA_URL, json=payload, timeout=None)
         response.raise_for_status()
         return response.json()
@@ -102,15 +106,15 @@ def _call_ollama(payload: dict):
             status_code=504, detail="Eroare: Timeout la conectarea cu modelul Ollama."
         ) from exc
 
+    except HTTPError as exc:
+        raise HTTPException(
+            status_code=404,
+            detail="Eroare: Modelul AI specificat nu este instalat local."
+            f" Rulează 'ollama pull {MODEL_NAME}'.",
+        ) from exc
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
-
-
-# @app.get("/")
-# def root():
-#     """Return service health status."""
-
-#     return {"message": "AI-Newsroom API is running"}
 
 
 @app.post("/ask")
@@ -190,5 +194,10 @@ def generate_article(request: PromptRequest):
 
     return {"draft": draft_text, "final_article": final_article}
 
+
+@app.get("/health")
+def health_check():
+    """Health check endpoint for automated tests."""
+    return {"status": "ok", "message": "AI-Newsroom API is running"}
 
 app.mount("/", StaticFiles(directory="src", html=True), name="static")
