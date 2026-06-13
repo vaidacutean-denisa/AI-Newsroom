@@ -62,6 +62,10 @@ function App() {
 
   const exportPDF = () => {
     const win = window.open("", "_blank");
+    if (!win) {
+      setError("Popup blocked. Allow popups to export PDF.");
+      return;
+    }
     win.document.write(`
       <html>
         <body>
@@ -92,24 +96,24 @@ ${currentMarkdown || ""}
 
     try {
       const startTime = Date.now();
-    
-      const res = await fetch("http://localhost:8000/article/generate", {
+
+      const res = await fetch("/article/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt }),
       });
-    
+
       if (!res.ok) throw new Error(await res.text());
-    
+
       const data = await res.json();
-    
+
       const draft = data?.draft ?? "";
       const finalRaw = data?.final_article ?? "";
-    
+
       const { feedback, final } = parseEditor(finalRaw);
-    
+
       setCurrentMarkdown(finalRaw);
-    
+
       setResult({
         title: capitalizeFirst(prompt),
         prompt,
@@ -117,14 +121,14 @@ ${currentMarkdown || ""}
         feedback,
         final,
       });
-    
+
       const duration = ((Date.now() - startTime) / 1000).toFixed(1);
-    
+
       addLog(
         "DONE",
         `Articol generat în ${duration} secunde`
       );
-    
+
     } catch (e) {
       addLog("ERROR", "Backend/Ollama fail");
       setResult({
