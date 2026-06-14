@@ -85,3 +85,28 @@ Cu ajutorul AI-ului au fost propuse și implementate îmbunătățiri ale experi
 ## 🎯 Concluzie
 
 Utilizarea instrumentelor AI a accelerat semnificativ procesul de dezvoltare a interfeței și a contribuit la îmbunătățirea experienței utilizatorului. AI-ul a fost utilizat atât pentru generarea și refactorizarea codului React, cât și pentru rezolvarea problemelor de integrare și optimizarea designului aplicației, reducând timpul necesar implementării și testării funcționalităților frontend.
+
+
+## Rol: QA & AI Evals Engineer
+
+Acest raport documentează modul în care inteligența artificială a fost integrată în procesul de testare automată, de analiză a calității limbajului generat și în configurarea sistemului de raportare automată a evaluării calitative (G-Eval / LLM-as-a-Judge) în cadrul proiectului **AI-Newsroom**.
+
+## 🛠️ Tool-uri AI Utilizate
+* **Gemini (Google):** Utilizat pentru decizii metodologice (alegerea framework-ului G-Eval și definirea criteriilor academice de Coerență și Relevanță), depanarea erorilor specifice sistemului Windows (rezolvarea `UnicodeEncodeError` prin setarea `PYTHONIOENCODING="utf-8"`) și redactarea suportului teoretic pentru susținerea proiectului.
+* **Antigravity IDE (AI IDE):** Utilizat pentru scrierea rapidă a structurilor de testare cu Pytest, mock-uirea request-urilor HTTP către Ollama și generarea scriptului de asamblare a rapoartelor finale Markdown.
+
+## 🚀 Etapele de dezvoltare asistate de AI
+
+### 1. Proiectarea Evaluării Calitative bazate pe LLM (G-Eval)
+* **Design-ul Evaluatorului:** AI-ul a asistat la definirea `EVALUATOR_SYSTEM_PROMPT` din `scripts/ai_evals.py`, ghidând modelul local `mistral` să adopte rolul de judecător imparțial. Acesta notează coerența și relevanța articolului final pe o scară de la 1 la 5 și justifică notele sub formă de text.
+* **Procesare Robustă JSON:** AI-ul a propus o logică de filtrare și curățare a blocurilor de cod Markdown (extragerea conținutului dintre tag-urile ` ```json `), prevenind căderea scripturilor în cazul în care modelul adaugă text suplimentar în afara obiectului JSON cerut.
+
+### 2. Dezvoltarea Sistemului de Raportare Automată (Reporting Pipeline)
+* **Raportare în Markdown:** S-a creat scriptul `scripts/generate_eval_report.py` pentru a automatiza colectarea metricilor de calitate din formatul brut JSON și convertirea lor în `docs/eval_report.md`. AI-ul a generat structura tabelară cu indicatori vizuali (e.g. `💚 Excellent`) pentru a oferi o viziune clară asupra performanței agenților.
+
+### 3. Implementarea Suitei de Meta-Testing (Teste Unitare pe Logica de QA)
+* **Validarea Regulilor de Testare:** Pentru a asigura corectitudinea evaluărilor, AI-ul a generat fișierul `tests/test_eval_logic.py` cu 9 teste unitare. Acestea validează separat comportamentul funcțiilor de parser și al aserțiunilor.
+* **Mock-uirea Scenariilor de Eșec:** AI-ul a asistat la configurarea mock-urilor pentru judecătorul LLM, testând comportamentul suitei atunci când modelul primește articole proaste și acordă note sub pragul minim admis (<3/5), fie pe coerență, fie pe relevanță.
+
+## 🎯 Concluzie
+Integrarea asistenței AI în fluxurile de QA a permis trecerea de la testarea funcțională tradițională la evaluarea semantică automatizată de nivel academic. Folosirea metodelor precum LLM-as-a-Judge și meta-testingul regulilor de testare asigură un pipeline de integrare robust, capabil să blocheze automat codul care degradează calitatea lingvistică a aplicației, economisind totodată timp prețios prin generarea automată a rapoartelor de progres.
