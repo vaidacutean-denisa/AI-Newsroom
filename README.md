@@ -13,6 +13,14 @@ Această arhitectură reflectă un proces real de redactare, în care conținutu
 
 ---
 
+## 🎥 Live Demo
+
+Urmăriți un scurt demo care ilustrează funcționalitatea completă a aplicației **AI-Newsroom**. În acest clip este prezentat fluxul de lucru multi-agent (Agentul Jurnalist și Agentul Editor Șef rulând local pe modelul Mistral), precum și interfața web interactivă, respectiv procesul dinamic de generare a articolelor.
+
+▶️ [Click aici pentru a viziona Live Demo-ul pe YouTube](https://youtu.be/pcNJUJ-hxeo?is=CX7qesKy1OXXRKp6)
+
+---
+
 ## 🎯 Obiective
 
 Proiectul urmărește atingerea mai multor obiective:
