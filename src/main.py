@@ -2,14 +2,17 @@
 
 import logging
 import os
+
 import requests
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from requests.exceptions import (
     ConnectionError as RequestsConnectionError,
-    Timeout,
+)
+from requests.exceptions import (
     HTTPError,
+    Timeout,
 )
 
 logging.basicConfig(level=logging.INFO)
