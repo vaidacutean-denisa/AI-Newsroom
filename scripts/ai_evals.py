@@ -5,9 +5,10 @@ Liu, Y., Iter, D., Xu, Y., Wang, S., Xu, R., & Zhu, C. (2023).
 G-eval: NLG evaluation using GPT-4 with better human alignment. arXiv preprint arXiv:2303.16634.
 """
 
+import json
 import os
 import sys
-import json
+
 import requests
 
 # Predefined journalist drafts for editor evaluation
@@ -89,7 +90,7 @@ def eval_llm_as_a_judge(draft_text, final_article, is_ci):
             
         data = json.loads(result_text)
         return data
-    except Exception as e:
+    except (requests.exceptions.RequestException, json.JSONDecodeError) as e:
         print(f"⚠️ Error during LLM-as-a-Judge evaluation: {e}")
         return {
             "coherence_score": 0,

@@ -4,11 +4,12 @@ Runs the evaluations and compiles a formatted Markdown report docs/eval_report.m
 containing scores and justifications.
 """
 
-import os
-import sys
 import json
+import os
 import subprocess
+import sys
 from datetime import datetime
+
 
 def run_evaluations_subprocess():
     """Runs scripts/ai_evals.py to populate docs/eval_results.json"""
@@ -24,13 +25,14 @@ def run_evaluations_subprocess():
             capture_output=True,
             text=True,
             env=env,
-            encoding="utf-8"
+            encoding="utf-8",
+	    check=False,
         )
         print(result.stdout)
         if result.returncode != 0:
             print(f"❌ Evaluation pipeline failed:\n{result.stderr}")
             sys.exit(result.returncode)
-    except Exception as e:
+    except (OSError, subprocess.SubprocessError) as e:
         print(f"❌ Failed to run evaluation script: {e}")
         sys.exit(1)
 

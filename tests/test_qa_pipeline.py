@@ -1,9 +1,10 @@
 """Tests for the AI-Newsroom agent pipeline and API behavior."""
 
-from unittest.mock import patch, Mock
-from fastapi.testclient import TestClient
-from src.main import app
+from unittest.mock import Mock, patch
 
+from fastapi.testclient import TestClient
+
+from src.main import app
 
 client = TestClient(app)
 
