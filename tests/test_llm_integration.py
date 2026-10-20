@@ -1,8 +1,11 @@
 """Integration tests for LLM API endpoints."""
 
 from unittest.mock import Mock, patch
-from requests.exceptions import ConnectionError as RequestsConnectionError, Timeout
+
 from fastapi.testclient import TestClient
+from requests.exceptions import ConnectionError as RequestsConnectionError
+from requests.exceptions import Timeout
+
 from src.main import (
     EDITOR_SYSTEM_PROMPT,
     INVALID_DRAFT_MESSAGE,

@@ -3,13 +3,14 @@ Unit tests for the custom evaluation rules in scripts/ai_evals.py.
 Verifies that validations correctly pass/fail depending on input quality.
 """
 
-from unittest.mock import patch, Mock
+from unittest.mock import Mock, patch
 
 from scripts.ai_evals import (
-    eval_markdown_and_structure,
+    eval_llm_as_a_judge,
     eval_logic_and_length,
-    eval_llm_as_a_judge
+    eval_markdown_and_structure,
 )
+
 
 def test_eval_markdown_and_structure_success():
     """Verify markdown validation passes with proper format."""
